@@ -1,26 +1,46 @@
 ---
 import { NextUIProvider } from "@nextui-org/react";
+import Header from "../components/header.astro";
+import "@fontsource-variable/roboto-mono";
 
 interface Props {
   title: string;
+  themeColor?: string;
 }
 
-const { title } = Astro.props;
+const { title, themeColor = "#EDD53E" } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="Astro description" />
+    <meta
+      name="description"
+      content="
+      Pokedex is a simple web app that allows you to search for your favorite Pokemon and see their stats.
+      It also allows you to see the evolution chain of each Pokemon.
+    "
+    />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#bdbdbd" />
+    <meta name="apple-mobile-web-app-title" content="Pokedex" />
+    <meta name="application-name" content="Pokedex" />
+    <meta name="msapplication-TileColor" content="#da532c" />
+    <meta name="theme-color" content={themeColor} />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
   <body>
+    <Header />
     <NextUIProvider>
-      <slot />
+      <main class="flex flex-col gap-4 mt-8">
+        <slot />
+      </main>
     </NextUIProvider>
   </body>
 </html>
