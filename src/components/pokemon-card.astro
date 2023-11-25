@@ -27,17 +27,23 @@ const backgroundColor = getTypeColorByPokemonTypeName(
   <article class="w-full flex flex-col gap-2">
     <Card
       shadow="none"
-      className={`flex justify-center overflow-visible   `}
+      className={`relative flex justify-center overflow-visible  `}
       style={{
         backgroundColor: backgroundColor ?? undefined,
       }}
     >
       <img
+        transition:name={`pokemon-${pokemon.name}-image`}
         src={pokemon.sprites.other.dream_world.front_default!}
         width="200}"
         height={60}
-        class="w-full h-60 relative bottom-4"
+        class="w-full h-60 relative bottom-4 z-10"
         alt={pokemon.name}
+      />
+
+      <img
+        src={"public/images/pokeball.webp"}
+        class="absolute bottom-0 right-0 rounded-2xl"
       />
     </Card>
     <div class="flex items-end justify-between">
@@ -46,9 +52,15 @@ const backgroundColor = getTypeColorByPokemonTypeName(
           >#{pokemon.order}</span
         >
 
-        <span class="text-2xl font-semibold first-letter:uppercase leading-none"
-          >{pokemon.name}</span
+        <h2
+          transition:name={`pokemon-${pokemon.name}-title`}
+          style={{
+            color: backgroundColor ?? undefined,
+          }}
+          class="text-2xl font-semibold first-letter:uppercase leading-none"
         >
+          {pokemon.name}
+        </h2>
       </div>
 
       <div class="flex items-center gap-1">
