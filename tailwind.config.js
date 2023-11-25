@@ -9,6 +9,9 @@ export default {
   ],
   theme: {
     extend: {},
+    fontFamily: {
+      sans: ["Roboto Mono Variable", "sans-serif"],
+    },
   },
   darkMode: "class",
   plugins: [
