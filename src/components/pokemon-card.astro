@@ -1,0 +1,68 @@
+---
+import { Card } from "@nextui-org/react";
+import { getTypeColorByPokemonTypeName } from "../utils/pokemon-types";
+
+import Pokedex from "pokedex-promise-v2";
+interface Props {
+  pokemonName: string;
+}
+
+const { pokemonName } = Astro.props;
+
+const p = new Pokedex();
+
+const pokemon = await p.getPokemonByName(pokemonName);
+
+const [firstPokemonType] = pokemon.types;
+
+const backgroundColor = getTypeColorByPokemonTypeName(
+  firstPokemonType.type.name,
+);
+---
+
+<a
+  href={`/pokemon/${pokemon.name}`}
+  class="hover:scale-105 transition-transform ease-in-out"
+>
+  <article class="w-full flex flex-col gap-2">
+    <Card
+      shadow="none"
+      className={`flex justify-center overflow-visible   `}
+      style={{
+        backgroundColor: backgroundColor ?? undefined,
+      }}
+    >
+      <img
+        src={pokemon.sprites.other.dream_world.front_default!}
+        width="200}"
+        height={60}
+        class="w-full h-60 relative bottom-4"
+        alt={pokemon.name}
+      />
+    </Card>
+    <div class="flex items-end justify-between">
+      <div class="flex flex-col gap-1">
+        <span class="text-base text-gray-400 leading-none"
+          >#{pokemon.order}</span
+        >
+
+        <span class="text-2xl font-semibold first-letter:uppercase leading-none"
+          >{pokemon.name}</span
+        >
+      </div>
+
+      <div class="flex items-center gap-1">
+        {
+          pokemon.types.map((type) => (
+            <img
+              width="38"
+              height="38"
+              class="scale-150"
+              src={`public/icons/pokemon-types/${type.type.name}.svg`}
+            />
+          ))
+        }
+      </div>
+    </div>
+  </article>
+</a>
