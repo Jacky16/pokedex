@@ -1,11 +1,18 @@
-<header class="w-full shadow-md py-3">
-  <a href="/" class="block w-fit">
-    <img
-      width="100"
-      height="53"
-      loading="eager"
-      src="/images/pokedex-icon.png"
-      alt="Pokedex Logo"
-    />
-  </a>
+---
+import Container from "./container.astro";
+---
+
+<header class="w-full flex justify-center shadow-md py-3">
+  <Container>
+    <a href="/" class="block w-fit">
+      <img
+        width="48"
+        height="48"
+        loading="eager"
+        src="/images/pokedex-icon.webp"
+        alt="Pokedex Logo"
+        class="object-contain"
+      />
+    </a>
+  </Container>
 </header>
