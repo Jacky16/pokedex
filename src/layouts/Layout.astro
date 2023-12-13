@@ -2,6 +2,7 @@
 import { NextUIProvider } from "@nextui-org/react";
 import Header from "../components/header.astro";
 import "@fontsource-variable/roboto-mono";
+import Container from "../components/container.astro";
 
 interface Props {
   title: string;
@@ -38,8 +39,10 @@ const { title, themeColor = "#EDD53E" } = Astro.props;
   <body>
     <Header />
     <NextUIProvider>
-      <main class="flex flex-col gap-4 mt-8">
-        <slot />
+      <main class="flex flex-col items-center gap-4 mt-8 px-2">
+        <Container>
+          <slot />
+        </Container>
       </main>
     </NextUIProvider>
   </body>
