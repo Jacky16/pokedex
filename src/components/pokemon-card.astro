@@ -1,8 +1,9 @@
 ---
 import { Card } from "@nextui-org/react";
 import { getTypeColorByPokemonTypeName } from "../utils/pokemon-types";
-
 import Pokedex from "pokedex-promise-v2";
+import BadgePokemonType from "./ui/badge-pokemon-type.astro";
+
 interface Props {
   pokemonName: string;
 }
@@ -66,12 +67,7 @@ const backgroundColor = getTypeColorByPokemonTypeName(
       <div class="flex items-center gap-1">
         {
           pokemon.types.map((type) => (
-            <img
-              width="38"
-              height="38"
-              class="scale-150"
-              src={`public/images/icons/pokemon-types/${type.type.name}.svg`}
-            />
+            <BadgePokemonType type={type.type.name} onlyIcon />
           ))
         }
       </div>
