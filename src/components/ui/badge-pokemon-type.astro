@@ -1,0 +1,39 @@
+---
+import { getTypeColorByPokemonTypeName } from "../../utils/pokemon-types";
+
+interface Props {
+  type: string;
+  onlyIcon?: boolean;
+}
+
+const { type, onlyIcon = false } = Astro.props;
+
+const typeColor = getTypeColorByPokemonTypeName(type);
+---
+
+{
+  onlyIcon ? (
+    <img
+      title={type}
+      alt={type}
+      class="scale-150"
+      width="38"
+      height="38"
+      src={`/public/images/icons/pokemon-types/${type}.svg`}
+    />
+  ) : (
+    <div
+      class="flex items-center px-2 rounded-full select-none"
+      style={{
+        backgroundColor: typeColor,
+      }}
+    >
+      <span class="first-letter:uppercase text-white">{type}</span>
+      <img
+        width="28"
+        height="28"
+        src={`/public/images/icons/pokemon-types/${type}.svg`}
+      />
+    </div>
+  )
+}
