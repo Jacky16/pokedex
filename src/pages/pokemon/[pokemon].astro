@@ -4,7 +4,8 @@ import Layout from "../../layouts/Layout.astro";
 import { getTypeColorByPokemonTypeName } from "../../utils/pokemon-types";
 import Container from "../../components/container.astro";
 import BadgePokemonType from "../../components/ui/badge-pokemon-type.astro";
-import { FaWeightHanging, FaRulerVertical, FaArrowLeft } from "react-icons/fa6";
+
+import { FaArrowLeft } from "react-icons/fa6";
 import PokemonStat from "../../components/pokemon-stat.astro";
 
 const p = new Pokedex();
@@ -58,7 +59,7 @@ const pokemonType = pokemonSpecies.genera.find(
           href="/"
           class="flex items-center gap-2 p-1 text-white border-2 w-fit rounded-lg hover:bg-primary hover:text-black transition-colors"
         >
-          <FaArrowLeft />
+          <FaArrowLeft client:load />
            Back
         </a>
         <img
