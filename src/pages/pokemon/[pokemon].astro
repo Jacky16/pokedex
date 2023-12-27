@@ -1,0 +1,79 @@
+---
+import Pokedex from "pokedex-promise-v2";
+import Layout from "../../layouts/Layout.astro";
+import { getTypeColorByPokemonTypeName } from "../../utils/pokemon-types";
+import Container from "../../components/container.astro";
+import BadgePokemonType from "../../components/ui/badge-pokemon-type.astro";
+const p = new Pokedex();
+
+export async function getStaticPaths() {
+  const pokedex = new Pokedex();
+  const allPokemons = await pokedex.getPokemonsList({
+    limit: -1,
+  });
+
+  return allPokemons.results.map((pokemon) => ({
+    params: {
+      pokemon: pokemon.name,
+    },
+  }));
+}
+
+const { pokemon } = Astro.params;
+
+const { types, order, sprites } = await p.getPokemonByName(pokemon);
+
+const [typePokemon] = types;
+const pokemonColor = getTypeColorByPokemonTypeName(typePokemon.type.name);
+---
+
+<Layout title={pokemon[0].toUpperCase() + pokemon.slice(1)}>
+  <div
+    class="w-full h-96 flex justify-center"
+    style={{
+      background: `linear-gradient(to bottom, ${pokemonColor} 0.5%, #fff)`,
+    }}
+  >
+    <Container>
+      <div
+        transition:name={`pokemon ${pokemon} box`}
+        class="flex flex-col gap-12"
+      >
+        <img
+          class="self-center"
+          transition:name={`${pokemon} image`}
+          src={sprites.other.dream_world.front_default!}
+          width={300}
+          height={100}
+          alt={pokemon}
+        />
+
+        <div
+          transition:name={`${pokemon} header`}
+          class="flex justify-between items-center gap-2"
+        >
+          <div class="flex flex-col">
+            <span class="text-xl text-gray-400 leading-none">#{order}</span>
+            <h1
+              style={{ color: pokemonColor }}
+              transition:name={`${pokemon} title`}
+              class="text-4xl font-bold first-letter:uppercase"
+            >
+              {pokemon}
+            </h1>
+          </div>
+
+          <ul class="flex items-center gap-2">
+            {
+              types.map(({ type }) => (
+                <li>
+                  <BadgePokemonType type={type.name} />
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+    </Container>
+  </div>
+</Layout>

@@ -28,17 +28,18 @@ const backgroundColor = getTypeColorByPokemonTypeName(
   <article class="w-full flex flex-col gap-2">
     <Card
       shadow="none"
-      className={`relative flex justify-center overflow-visible  `}
+      className={`relative flex justify-center items-center overflow-visible h-72 w-72  `}
+      transition:name={`pokemon ${pokemon.name} box`}
       style={{
         backgroundColor: backgroundColor ?? undefined,
       }}
     >
       <img
-        transition:name={`pokemon-${pokemon.name}-image`}
+        class="z-10 scale-125"
+        transition:name={`${pokemon.name} image`}
         src={pokemon.sprites.other.dream_world.front_default!}
-        width="200}"
+        width={200}
         height={60}
-        class="w-full h-60 relative bottom-4 z-10"
         alt={pokemon.name}
       />
 
@@ -48,13 +49,16 @@ const backgroundColor = getTypeColorByPokemonTypeName(
       />
     </Card>
     <div class="flex items-end justify-between">
-      <div class="flex flex-col gap-1">
+      <div
+        transition:name={`${pokemon.name} header`}
+        class="flex flex-col gap-1"
+      >
         <span class="text-base text-gray-400 leading-none"
           >#{pokemon.order}</span
         >
 
         <h2
-          transition:name={`pokemon-${pokemon.name}-title`}
+          transition:name={`${pokemon.name} title`}
           style={{
             color: backgroundColor ?? undefined,
           }}
@@ -64,13 +68,15 @@ const backgroundColor = getTypeColorByPokemonTypeName(
         </h2>
       </div>
 
-      <div class="flex items-center gap-1">
+      <ul class="flex items-center gap-1">
         {
-          pokemon.types.map((type) => (
-            <BadgePokemonType type={type.type.name} onlyIcon />
+          pokemon.types.map(({ type }) => (
+            <li>
+              <BadgePokemonType type={type.name} onlyIcon />
+            </li>
           ))
         }
-      </div>
+      </ul>
     </div>
   </article>
 </a>
