@@ -40,10 +40,8 @@ const { title, themeColor = "#EDD53E" } = Astro.props;
   </head>
   <body>
     <Header />
-    <NextUIProvider>
-      <main class="flex flex-col items-center gap-4">
-        <slot />
-      </main>
-    </NextUIProvider>
+    <main class="flex flex-col items-center gap-4">
+      <slot />
+    </main>
   </body>
 </html>
