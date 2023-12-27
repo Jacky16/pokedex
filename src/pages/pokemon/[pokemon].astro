@@ -4,6 +4,9 @@ import Layout from "../../layouts/Layout.astro";
 import { getTypeColorByPokemonTypeName } from "../../utils/pokemon-types";
 import Container from "../../components/container.astro";
 import BadgePokemonType from "../../components/ui/badge-pokemon-type.astro";
+import { FaWeightHanging, FaRulerVertical, FaArrowLeft } from "react-icons/fa6";
+import PokemonStat from "../../components/pokemon-stat.astro";
+
 const p = new Pokedex();
 
 export async function getStaticPaths() {
@@ -21,15 +24,28 @@ export async function getStaticPaths() {
 
 const { pokemon } = Astro.params;
 
-const { types, order, sprites } = await p.getPokemonByName(pokemon);
+const { types, order, sprites, weight, height, abilities, base_experience } =
+  await p.getPokemonByName(pokemon);
 
 const [typePokemon] = types;
+
 const pokemonColor = getTypeColorByPokemonTypeName(typePokemon.type.name);
+const pokemonSpecies = await p.getPokemonSpeciesByName(pokemon);
+
+const pokemonDescription = pokemonSpecies.flavor_text_entries.find(
+  (entry) => entry.language.name === "en",
+)?.flavor_text;
+
+const pokemonType = pokemonSpecies.genera.find(
+  (entry) => entry.language.name === "en",
+)?.genus;
+
+console.log(pokemonDescription);
 ---
 
 <Layout title={pokemon[0].toUpperCase() + pokemon.slice(1)}>
   <div
-    class="w-full h-96 flex justify-center"
+    class="w-full h-96 flex justify-center pt-4"
     style={{
       background: `linear-gradient(to bottom, ${pokemonColor} 0.5%, #fff)`,
     }}
@@ -38,8 +54,15 @@ const pokemonColor = getTypeColorByPokemonTypeName(typePokemon.type.name);
       <div
         transition:name={`pokemon ${pokemon} box`}
         transition:animate="none"
-        class="flex flex-col gap-12"
+        class="relative flex flex-col gap-8"
       >
+        <a
+          href="/"
+          class="flex items-center gap-2 p-1 text-white border-2 w-fit rounded-lg hover:bg-primary hover:text-black transition-colors"
+        >
+          <FaArrowLeft />
+           Back
+        </a>
         <img
           class="self-center"
           transition:name={`${pokemon} image`}
@@ -54,16 +77,18 @@ const pokemonColor = getTypeColorByPokemonTypeName(typePokemon.type.name);
           class="flex justify-between items-center gap-2"
         >
           <div class="flex flex-col">
-            <span class="text-xl text-gray-400 leading-none">#{order}</span>
+            <span
+              transition:name={`${pokemon} ${order} order`}
+              class="text-xl italic text-gray-400 leading-none">#{order}</span
+            >
             <h1
               style={{ color: pokemonColor }}
               transition:name={`${pokemon} title`}
-              class="text-4xl font-bold first-letter:uppercase"
+              class="text-5xl font-extrabold first-letter:uppercase"
             >
               {pokemon}
             </h1>
           </div>
-
           <ul class="flex items-center gap-2">
             {
               types.map(({ type }) => (
@@ -74,6 +99,55 @@ const pokemonColor = getTypeColorByPokemonTypeName(typePokemon.type.name);
             }
           </ul>
         </div>
+
+        <p>
+          {pokemonDescription?.replace("", " ")}
+        </p>
+        <section class="flex flex-col gap-2">
+          <h2 class="text-3xl text-gray-800 font-bold">About</h2>
+
+          <div class="flex flex-col gap-2">
+            <PokemonStat label="Species:" value={pokemonType} />
+
+            <PokemonStat
+              label="Height:"
+              value={`${(height / 10).toFixed(1)} m`}
+            />
+
+            <PokemonStat
+              label="Weight:"
+              value={`${(weight / 10).toFixed(1)} kg`}
+            />
+
+            <div class="flex items-center gap-2">
+              <PokemonStat
+                label="Abilities:"
+                value={abilities.map(({ ability }) => ability.name).join(", ")}
+              />
+            </div>
+          </div>
+        </section>
+
+        <section class="flex flex-col gap-2">
+          <h2 class="text-3xl text-gray-800 font-bold">Training</h2>
+
+          <PokemonStat label="Base Exp:" value={base_experience as number} />
+
+          <PokemonStat
+            label="Base Happiness:"
+            value={pokemonSpecies.base_happiness ?? ""}
+          />
+
+          <PokemonStat
+            label="Capture Rate:"
+            value={`${pokemonSpecies.capture_rate}%`}
+          />
+
+          <PokemonStat
+            label="Growth Rate:"
+            value={pokemonSpecies.growth_rate?.name}
+          />
+        </section>
       </div>
     </Container>
   </div>
