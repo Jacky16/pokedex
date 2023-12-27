@@ -52,8 +52,9 @@ const backgroundColor = getTypeColorByPokemonTypeName(
         transition:name={`${pokemon.name} header`}
         class="flex flex-col gap-1"
       >
-        <span class="text-base text-gray-400 leading-none"
-          >#{pokemon.order}</span
+        <span
+          transition:name={`${pokemon.name} ${pokemon.order} order`}
+          class="text-base text-gray-400 leading-none">#{pokemon.order}</span
         >
 
         <h2
