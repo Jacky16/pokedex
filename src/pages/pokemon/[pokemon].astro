@@ -39,8 +39,6 @@ const pokemonDescription = pokemonSpecies.flavor_text_entries.find(
 const pokemonType = pokemonSpecies.genera.find(
   (entry) => entry.language.name === "en",
 )?.genus;
-
-console.log(pokemonDescription);
 ---
 
 <Layout title={pokemon[0].toUpperCase() + pokemon.slice(1)}>
