@@ -1,0 +1,84 @@
+---
+import Pokedex, { type Chain, type EvolutionChain } from "pokedex-promise-v2";
+import {
+  getPokemonEvolutionChain,
+  getPokemonImage,
+} from "../utils/pokemon-types";
+import { FaChevronDown, FaChevronRight } from "react-icons/fa6";
+
+interface Props {
+  chainUrl?: string;
+}
+
+const pokedex = new Pokedex();
+
+const { chainUrl } = Astro.props;
+
+const chainData = (await (await fetch(chainUrl!)).json()) as EvolutionChain;
+
+const chain = chainData.chain as Chain;
+
+const evolutions = await getPokemonEvolutionChain(chain).map(
+  async (evolution) => {
+    return {
+      ...evolution,
+      image: await getPokemonImage(evolution.name),
+    };
+  },
+);
+---
+
+<article
+  class="relative w-full h-fit py-2 overflow-hidden rounded-lg text-white"
+>
+  <div
+    class="absolute top-0 z-[-2] h-full w-full bg-neutral-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]"
+  >
+  </div>
+
+  <div class="p-4">
+    <span class="text-3xl font-bold">Evolutions</span>
+    <div
+      class="flex flex-col items-center md:flex-row justify-center h-full w-full md:gap-6"
+    >
+      {
+        evolutions.map(async (evolution, index) => {
+          const { name, image, level } = await evolution;
+
+          return (
+            <>
+              {index !== evolutions.length && index != 0 && (
+                <div class="hidden md:flex flex-col items-center gap-2">
+                  <FaChevronRight />
+                  <span class="font-thin">Nv {level}</span>
+                </div>
+              )}
+              <a
+                href={`/pokemon/${name}`}
+                class="flex flex-col items-center justify-center hover:opacity-80 hover:scale-105 transition-all duration-300 ease-in-out"
+              >
+                <img
+                  width="94"
+                  height="94"
+                  class="md:w-52 md:h-52"
+                  src={image}
+                  alt={name}
+                />
+
+                <p class="text-sm md:text-lg font-bold first-letter:uppercase">
+                  {name}
+                </p>
+
+                {index !== evolutions.length - 1 && evolutions.length > 1 && (
+                  <span class="md:hidden">
+                    <FaChevronDown />
+                  </span>
+                )}
+              </a>
+            </>
+          );
+        })
+      }
+    </div>
+  </div>
+</article>
