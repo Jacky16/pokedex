@@ -1,0 +1,37 @@
+---
+interface Props {
+  percentage: number;
+  max?: number;
+  backgroundColor?: string | null;
+  label?: string | null;
+}
+
+const { percentage, backgroundColor, label, max } = Astro.props;
+---
+
+<div class="flex-1 flex flex-col items-center gap-2">
+  <div class="bg-gray-200 rotate-180 h-64 w-4 rounded-xl overflow-hidden">
+    <div
+      class="w-4"
+      style={{
+        backgroundColor,
+        height: `${(percentage / (max ?? 100)) * 100}%`,
+      }}
+    >
+    </div>
+  </div>
+
+  <div class="flex flex-col text-center">
+    {
+      label && (
+        <span class="text-gray-700 font-medium leading-tight first-letter:uppercase">
+          {label}
+        </span>
+      )
+    }
+
+    <span class="text-gray-500 text-sm"
+      >{Math.round(percentage * 100) / 100}</span
+    >
+  </div>
+</div>
