@@ -24,7 +24,7 @@ const backgroundColor = getTypeColorByPokemonTypeName(
   href={`/pokemon/${pokemon.name}`}
   class="hover:scale-105 transition-transform ease-in-out"
 >
-  <article class="w-full flex flex-col gap-2">
+  <article class="relative w-full flex flex-col gap-2">
     <div
       class={`relative flex justify-center items-center overflow-visible h-72 w-72 rounded-xl`}
       transition:name={`pokemon ${pokemon.name} box`}
@@ -32,6 +32,10 @@ const backgroundColor = getTypeColorByPokemonTypeName(
         backgroundColor: backgroundColor ?? undefined,
       }}
     >
+      <div
+        class="absolute inset-0 -z-10 h-full w-ful bg-transparent bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:48px_48px]"
+      >
+      </div>
       <img
         class="z-10 scale-125"
         transition:name={`${pokemon.name} image`}
@@ -54,7 +58,8 @@ const backgroundColor = getTypeColorByPokemonTypeName(
       >
         <span
           transition:name={`${pokemon.name} ${pokemon.order} order`}
-          class="text-base text-gray-400 leading-none">#{pokemon.order}</span
+          class="text-base text-gray-400 leading-none"
+          >#{pokemon.order.toString().padStart(3, "0")}</span
         >
 
         <h2
