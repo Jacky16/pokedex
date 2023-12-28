@@ -1,4 +1,5 @@
 ---
+
 import Pokedex from "pokedex-promise-v2";
 import Layout from "../../layouts/Layout.astro";
 import { getTypeColorByPokemonTypeName } from "../../utils/pokemon-types";
@@ -11,23 +12,21 @@ import ProgressBar from "../../components/ui/progress-bar.astro";
 import Evolutions from "../../components/evolutions.astro";
 import { fade } from "astro:transitions";
 
-const p = new Pokedex();
-
-export async function getStaticPaths() {
-  const pokedex = new Pokedex();
-  const allPokemons = await pokedex.getPokemonsList({
-    limit: -1,
-  });
-
-  return allPokemons.results.map((pokemon) => ({
-    params: {
-      pokemon: pokemon.name,
-    },
-  }));
-}
 
 const { pokemon: pokemonId } = Astro.params;
 
+let pokemonData = null;
+
+const p = new Pokedex();
+
+try {
+    pokemonData = await p.getPokemonByName(pokemonId ?? "")
+} catch(e) {
+    return Astro.redirect("/404", 404);
+}
+
+if(!pokemonData) return Astro.redirect("/404", 404);
+ 
 const {
   types,
   order,
@@ -37,7 +36,8 @@ const {
   abilities,
   base_experience,
   stats,
-} = await p.getPokemonByName(pokemonId);
+  name
+} = pokemonData
 
 const [typePokemon, secondTypePokemon] = types;
 
@@ -46,7 +46,7 @@ const pokemonColorSecondType = getTypeColorByPokemonTypeName(
   secondTypePokemon?.type.name,
 );
 
-const pokemonSpecies = await p.getPokemonSpeciesByName(pokemonId);
+const pokemonSpecies = await p.getPokemonSpeciesByName(name);
 
 const pokemonDescription = pokemonSpecies.flavor_text_entries.find(
   (entry) => entry.language.name === "en",
@@ -55,9 +55,11 @@ const pokemonDescription = pokemonSpecies.flavor_text_entries.find(
 const pokemonType = pokemonSpecies.genera.find(
   (entry) => entry.language.name === "en",
 )?.genus;
+
+
 ---
 
-<Layout title={pokemonId[0].toUpperCase() + pokemonId.slice(1)}>
+<Layout title={name[0].toUpperCase() + name.slice(1)}>
   <div
     class="absolute bottom-auto right-52 top-36 h-[450px] w-[350px] rounded-full opacity-40 blur-[80px]"
     style={{
@@ -93,7 +95,7 @@ const pokemonType = pokemonSpecies.genera.find(
           transition:name={`${pokemonId} image`}
           src={sprites.other.dream_world.front_default!}
           width={300}
-          height={100}
+          height={300}
           alt={pokemonId}
         />
 

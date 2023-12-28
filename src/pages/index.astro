@@ -1,7 +1,19 @@
 ---
+import PokemonCard from "../components/pokemon-card.astro";
 import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout title="Pokedex">
-  <h1>Pokedex</h1>
+  <div
+    class="grid gap-y-8 gap-x-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4"
+  >
+    <PokemonCard pokemonName="bulbasaur" />
+    <PokemonCard pokemonName="squirtle" />
+    <PokemonCard pokemonName="charmander" />
+    <PokemonCard pokemonName="eevee" />
+    <PokemonCard pokemonName="ditto" />
+    <PokemonCard pokemonName="pikachu" />
+    <PokemonCard pokemonName="charizard" />
+    <PokemonCard pokemonName="mew" />
+  </div>
 </Layout>
