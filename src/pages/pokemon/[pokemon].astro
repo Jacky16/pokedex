@@ -8,6 +8,8 @@ import BadgePokemonType from "../../components/ui/badge-pokemon-type.astro";
 import { FaArrowLeft } from "react-icons/fa6";
 import PokemonStat from "../../components/pokemon-stat.astro";
 import ProgressBar from "../../components/ui/progress-bar.astro";
+import Evolutions from "../../components/evolutions.astro";
+import { fade } from "astro:transitions";
 
 const p = new Pokedex();
 
@@ -24,7 +26,7 @@ export async function getStaticPaths() {
   }));
 }
 
-const { pokemon } = Astro.params;
+const { pokemon: pokemonId } = Astro.params;
 
 const {
   types,
@@ -35,16 +37,16 @@ const {
   abilities,
   base_experience,
   stats,
-} = await p.getPokemonByName(pokemon);
+} = await p.getPokemonByName(pokemonId);
 
 const [typePokemon, secondTypePokemon] = types;
 
 const pokemonColor = getTypeColorByPokemonTypeName(typePokemon.type.name);
-
 const pokemonColorSecondType = getTypeColorByPokemonTypeName(
   secondTypePokemon?.type.name,
 );
-const pokemonSpecies = await p.getPokemonSpeciesByName(pokemon);
+
+const pokemonSpecies = await p.getPokemonSpeciesByName(pokemonId);
 
 const pokemonDescription = pokemonSpecies.flavor_text_entries.find(
   (entry) => entry.language.name === "en",
@@ -55,7 +57,7 @@ const pokemonType = pokemonSpecies.genera.find(
 )?.genus;
 ---
 
-<Layout title={pokemon[0].toUpperCase() + pokemon.slice(1)}>
+<Layout title={pokemonId[0].toUpperCase() + pokemonId.slice(1)}>
   <div
     class="absolute bottom-auto right-52 top-36 h-[450px] w-[350px] rounded-full opacity-40 blur-[80px]"
     style={{
@@ -75,7 +77,7 @@ const pokemonType = pokemonSpecies.genera.find(
   >
     <Container>
       <div
-        transition:name={`pokemon ${pokemon} box`}
+        transition:name={`pokemon ${pokemonId} box`}
         transition:animate="none"
         class="relative flex flex-col gap-8"
       >
@@ -88,29 +90,29 @@ const pokemonType = pokemonSpecies.genera.find(
         </a>
         <img
           class="self-center"
-          transition:name={`${pokemon} image`}
+          transition:name={`${pokemonId} image`}
           src={sprites.other.dream_world.front_default!}
           width={300}
           height={100}
-          alt={pokemon}
+          alt={pokemonId}
         />
 
         <div
-          transition:name={`${pokemon} header`}
-          class="flex justify-between items-center gap-2"
+          transition:name={`${pokemonId} header`}
+          class="flex justify-between items-center flex-wrap gap-2"
         >
           <div class="flex flex-col">
             <span
-              transition:name={`${pokemon} ${order} order`}
+              transition:name={`${pokemonId} ${order} order`}
               class="text-2xl italic text-gray-400 leading-none"
               >#{order.toString().padStart(3, "0")}</span
             >
             <h1
               style={{ color: pokemonColor }}
-              transition:name={`${pokemon} title`}
+              transition:name={`${pokemonId} title`}
               class="text-5xl font-extrabold first-letter:uppercase"
             >
-              {pokemon}
+              {pokemonId}
             </h1>
           </div>
           <ul class="flex items-center gap-2">
@@ -123,12 +125,18 @@ const pokemonType = pokemonSpecies.genera.find(
             }
           </ul>
         </div>
-
-        <p>
+        <p
+          transition:name={`${pokemonId} description`}
+          transition:animate={fade({ duration: 500 })}
+        >
           {pokemonDescription?.replace("", " ")}
         </p>
 
-        <div class="flex flex-col md:flex-row gap-6 md:gap-0">
+        <div
+          transition:name={`${pokemonId} about`}
+          transition:animate={fade({ duration: 500 })}
+          class="flex flex-col justify-between md:flex-row gap-6 md:gap-0"
+        >
           <div class="flex-1 flex flex-col gap-6">
             <section class="flex flex-col gap-2">
               <h2 class="text-3xl text-gray-800 font-bold">About</h2>
@@ -185,7 +193,7 @@ const pokemonType = pokemonSpecies.genera.find(
             <h2 class="text-3xl text-gray-800 font-bold">Stats</h2>
 
             <div
-              class="w-full flex justify-betwwen bg-white border-2 py-4 rounded-lg"
+              class="w-full flex justify-betwwen bg-white border-2 border-gray-50 py-4 rounded-lg"
             >
               {
                 stats.map(({ base_stat, stat: { name } }) => (
@@ -201,6 +209,15 @@ const pokemonType = pokemonSpecies.genera.find(
           </section>
         </div>
       </div>
+
+      <section
+        transition:name={`${pokemonId} evolutions`}
+        transition:animate={fade({ duration: 500 })}
+        aria-label="Evolutions"
+        class="flex flex-col gap-2 w-full"
+      >
+        <Evolutions chainUrl={pokemonSpecies.evolution_chain?.url} />
+      </section>
     </Container>
   </div>
 </Layout>

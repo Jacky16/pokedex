@@ -1,3 +1,7 @@
+import type { Chain } from "pokedex-promise-v2";
+
+import Pokedex from "pokedex-promise-v2";
+
 export const getTypeColorByPokemonTypeName = (
   typeName: string,
 ): string | null => {
@@ -45,4 +49,33 @@ export const getTypeColorByPokemonTypeName = (
     default:
       return null;
   }
+};
+
+export const getPokemonImage = async (pokemonName: string) => {
+  const pokedex = new Pokedex();
+
+  const pokemon = await pokedex.getPokemonByName(pokemonName);
+
+  return pokemon.sprites.other["official-artwork"].front_default;
+};
+
+export const getPokemonEvolutionChain = (chain: Chain) => {
+  const evolutionChain = [];
+
+  evolutionChain.push({
+    name: chain.species.name,
+  });
+
+  let currentEvolution = chain.evolves_to;
+
+  while (currentEvolution.length !== 0) {
+    evolutionChain.push({
+      name: currentEvolution[0].species.name,
+      level: currentEvolution[0].evolution_details[0]?.min_level,
+    });
+
+    currentEvolution = currentEvolution[0].evolves_to;
+  }
+
+  return evolutionChain;
 };
