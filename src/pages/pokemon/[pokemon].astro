@@ -7,6 +7,7 @@ import BadgePokemonType from "../../components/ui/badge-pokemon-type.astro";
 
 import { FaArrowLeft } from "react-icons/fa6";
 import PokemonStat from "../../components/pokemon-stat.astro";
+import ProgressBar from "../../components/ui/progress-bar.astro";
 
 const p = new Pokedex();
 
@@ -25,12 +26,24 @@ export async function getStaticPaths() {
 
 const { pokemon } = Astro.params;
 
-const { types, order, sprites, weight, height, abilities, base_experience } =
-  await p.getPokemonByName(pokemon);
+const {
+  types,
+  order,
+  sprites,
+  weight,
+  height,
+  abilities,
+  base_experience,
+  stats,
+} = await p.getPokemonByName(pokemon);
 
-const [typePokemon] = types;
+const [typePokemon, secondTypePokemon] = types;
 
 const pokemonColor = getTypeColorByPokemonTypeName(typePokemon.type.name);
+
+const pokemonColorSecondType = getTypeColorByPokemonTypeName(
+  secondTypePokemon?.type.name,
+);
 const pokemonSpecies = await p.getPokemonSpeciesByName(pokemon);
 
 const pokemonDescription = pokemonSpecies.flavor_text_entries.find(
@@ -43,6 +56,17 @@ const pokemonType = pokemonSpecies.genera.find(
 ---
 
 <Layout title={pokemon[0].toUpperCase() + pokemon.slice(1)}>
+  <div
+    class="absolute bottom-auto right-52 top-36 h-[450px] w-[350px] rounded-full opacity-40 blur-[80px]"
+    style={{
+      backgroundColor: pokemonColorSecondType,
+    }}
+  >
+  </div>
+  <div
+    class="fixed inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]"
+  >
+  </div>
   <div
     class="w-full h-96 flex justify-center pt-4"
     style={{
@@ -78,7 +102,8 @@ const pokemonType = pokemonSpecies.genera.find(
           <div class="flex flex-col">
             <span
               transition:name={`${pokemon} ${order} order`}
-              class="text-xl italic text-gray-400 leading-none">#{order}</span
+              class="text-2xl italic text-gray-400 leading-none"
+              >#{order.toString().padStart(3, "0")}</span
             >
             <h1
               style={{ color: pokemonColor }}
@@ -102,51 +127,79 @@ const pokemonType = pokemonSpecies.genera.find(
         <p>
           {pokemonDescription?.replace("", " ")}
         </p>
-        <section class="flex flex-col gap-2">
-          <h2 class="text-3xl text-gray-800 font-bold">About</h2>
 
-          <div class="flex flex-col gap-2">
-            <PokemonStat label="Species:" value={pokemonType} />
+        <div class="flex flex-col md:flex-row gap-6 md:gap-0">
+          <div class="flex-1 flex flex-col gap-6">
+            <section class="flex flex-col gap-2">
+              <h2 class="text-3xl text-gray-800 font-bold">About</h2>
 
-            <PokemonStat
-              label="Height:"
-              value={`${(height / 10).toFixed(1)} m`}
-            />
+              <div class="flex flex-col gap-2">
+                <PokemonStat label="Species:" value={pokemonType} />
 
-            <PokemonStat
-              label="Weight:"
-              value={`${(weight / 10).toFixed(1)} kg`}
-            />
+                <PokemonStat
+                  label="Height:"
+                  value={`${(height / 10).toFixed(1)} m`}
+                />
 
-            <div class="flex items-center gap-2">
+                <PokemonStat
+                  label="Weight:"
+                  value={`${(weight / 10).toFixed(1)} kg`}
+                />
+
+                <div class="flex items-center gap-2">
+                  <PokemonStat
+                    label="Abilities:"
+                    value={abilities
+                      .map(({ ability }) => ability.name)
+                      .join(", ")}
+                  />
+                </div>
+              </div>
+            </section>
+
+            <section class="flex flex-col gap-2">
+              <h2 class="text-3xl text-gray-800 font-bold">Training</h2>
+
               <PokemonStat
-                label="Abilities:"
-                value={abilities.map(({ ability }) => ability.name).join(", ")}
+                label="Base Exp:"
+                value={base_experience as number}
               />
-            </div>
+
+              <PokemonStat
+                label="Base Happiness:"
+                value={pokemonSpecies.base_happiness ?? ""}
+              />
+
+              <PokemonStat
+                label="Capture Rate:"
+                value={`${pokemonSpecies.capture_rate}%`}
+              />
+
+              <PokemonStat
+                label="Growth Rate:"
+                value={pokemonSpecies.growth_rate?.name}
+              />
+            </section>
           </div>
-        </section>
+          <section class="flex-1 flex flex-col gap-2">
+            <h2 class="text-3xl text-gray-800 font-bold">Stats</h2>
 
-        <section class="flex flex-col gap-2">
-          <h2 class="text-3xl text-gray-800 font-bold">Training</h2>
-
-          <PokemonStat label="Base Exp:" value={base_experience as number} />
-
-          <PokemonStat
-            label="Base Happiness:"
-            value={pokemonSpecies.base_happiness ?? ""}
-          />
-
-          <PokemonStat
-            label="Capture Rate:"
-            value={`${pokemonSpecies.capture_rate}%`}
-          />
-
-          <PokemonStat
-            label="Growth Rate:"
-            value={pokemonSpecies.growth_rate?.name}
-          />
-        </section>
+            <div
+              class="w-full flex justify-betwwen bg-white border-2 py-4 rounded-lg"
+            >
+              {
+                stats.map(({ base_stat, stat: { name } }) => (
+                  <ProgressBar
+                    backgroundColor={pokemonColor}
+                    max={255}
+                    percentage={base_stat}
+                    label={name.replace("-", " ")}
+                  />
+                ))
+              }
+            </div>
+          </section>
+        </div>
       </div>
     </Container>
   </div>
