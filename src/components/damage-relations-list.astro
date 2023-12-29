@@ -1,0 +1,52 @@
+---
+import type { TypeDamageRelations } from "pokedex-promise-v2";
+import BadgePokemonType from "./ui/badge-pokemon-type.astro";
+interface Props {
+  damageRelations: TypeDamageRelations;
+  showType: "from" | "to";
+}
+
+const { damageRelations, showType } = Astro.props;
+---
+
+<ul class="flex flex-wrap gap-4">
+  {
+    showType === "from" ? (
+      <>
+        {damageRelations.double_damage_from.map((type) => (
+          <li>
+            <BadgePokemonType type={type.name} effectivity="X2" />
+          </li>
+        ))}
+        {damageRelations.half_damage_from.map((type) => (
+          <li>
+            <BadgePokemonType type={type.name} effectivity="1/2" />
+          </li>
+        ))}
+        {damageRelations.no_damage_from.map((type) => (
+          <li>
+            <BadgePokemonType type={type.name} />
+          </li>
+        ))}
+      </>
+    ) : (
+      <>
+        {damageRelations.double_damage_to.map((type) => (
+          <li>
+            <BadgePokemonType type={type.name} effectivity="X2" />
+          </li>
+        ))}
+        {damageRelations.half_damage_to.map((type) => (
+          <li>
+            <BadgePokemonType type={type.name} effectivity="1/2" />
+          </li>
+        ))}
+        {damageRelations.no_damage_to.map((type) => (
+          <li>
+            <BadgePokemonType type={type.name} />
+          </li>
+        ))}
+      </>
+    )
+  }
+</ul>
