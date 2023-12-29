@@ -1,17 +1,15 @@
 ---
-
 import Pokedex from "pokedex-promise-v2";
 import Layout from "../../layouts/Layout.astro";
 import { getTypeColorByPokemonTypeName } from "../../utils/pokemon-types";
 import Container from "../../components/container.astro";
 import BadgePokemonType from "../../components/ui/badge-pokemon-type.astro";
-
 import { FaArrowLeft } from "react-icons/fa6";
 import PokemonStat from "../../components/pokemon-stat.astro";
 import ProgressBar from "../../components/ui/progress-bar.astro";
 import Evolutions from "../../components/evolutions.astro";
 import { fade } from "astro:transitions";
-
+import DamageRelationsList from "../../components/damage-relations-list.astro";
 
 const { pokemon: pokemonId } = Astro.params;
 
@@ -20,13 +18,13 @@ let pokemonData = null;
 const p = new Pokedex();
 
 try {
-    pokemonData = await p.getPokemonByName(pokemonId ?? "")
-} catch(e) {
-    return Astro.redirect("/404", 404);
+  pokemonData = await p.getPokemonByName(pokemonId ?? "");
+} catch (e) {
+  return Astro.redirect("/404", 404);
 }
 
-if(!pokemonData) return Astro.redirect("/404", 404);
- 
+if (!pokemonData) return Astro.redirect("/404", 404);
+
 const {
   types,
   order,
@@ -36,8 +34,8 @@ const {
   abilities,
   base_experience,
   stats,
-  name
-} = pokemonData
+  name,
+} = pokemonData;
 
 const [typePokemon, secondTypePokemon] = types;
 
@@ -56,7 +54,18 @@ const pokemonType = pokemonSpecies.genera.find(
   (entry) => entry.language.name === "en",
 )?.genus;
 
+const damageRelations = await p.getTypeByName(typePokemon.type.name);
 
+if (secondTypePokemon) {
+  const damageRelationsSecondType = await p.getTypeByName(
+    secondTypePokemon.type.name,
+  );
+
+  damageRelations.damage_relations.double_damage_from = [
+    ...damageRelations.damage_relations.double_damage_from,
+    ...damageRelationsSecondType.damage_relations.double_damage_from,
+  ];
+}
 ---
 
 <Layout title={name[0].toUpperCase() + name.slice(1)}>
@@ -88,7 +97,7 @@ const pokemonType = pokemonSpecies.genera.find(
           class="flex items-center gap-2 p-1 text-white border-2 w-fit rounded-lg hover:bg-primary hover:text-black transition-colors"
         >
           <FaArrowLeft client:load />
-           Back
+          Back
         </a>
         <img
           class="self-center"
@@ -137,7 +146,7 @@ const pokemonType = pokemonSpecies.genera.find(
         <div
           transition:name={`${pokemonId} about`}
           transition:animate={fade({ duration: 500 })}
-          class="flex flex-col justify-between md:flex-row gap-6 md:gap-0"
+          class="flex flex-col justify-between md:flex-row gap-6 md:gap-8"
         >
           <div class="flex-1 flex flex-col gap-6">
             <section class="flex flex-col gap-2">
@@ -191,6 +200,7 @@ const pokemonType = pokemonSpecies.genera.find(
               />
             </section>
           </div>
+
           <section class="flex-1 flex flex-col gap-2">
             <h2 class="text-3xl text-gray-800 font-bold">Stats</h2>
 
@@ -210,16 +220,35 @@ const pokemonType = pokemonSpecies.genera.find(
             </div>
           </section>
         </div>
-      </div>
 
-      <section
-        transition:name={`${pokemonId} evolutions`}
-        transition:animate={fade({ duration: 500 })}
-        aria-label="Evolutions"
-        class="flex flex-col gap-2 w-full"
-      >
-        <Evolutions chainUrl={pokemonSpecies.evolution_chain?.url} />
-      </section>
+        <div
+          class="flex flex-col md:flex-row gap-6"
+          transition:name={`${pokemonId} damage relations`}
+          transition:animate={fade({ duration: 500 })}
+        >
+          <section class="flex-1 flex flex-col gap-4">
+            <h2 class="text-3xl text-gray-800 font-bold">Weakness</h2>
+
+            <DamageRelationsList
+              damageRelations={damageRelations.damage_relations}
+              showType="from"
+            />
+          </section>
+
+          <section class="flex-1 flex flex-col gap-4">
+            <h2 class="text-3xl text-gray-800 font-bold">Strength</h2>
+
+            <DamageRelationsList
+              damageRelations={damageRelations.damage_relations}
+              showType="to"
+            />
+          </section>
+        </div>
+
+        <section aria-label="Evolutions" class="flex flex-col gap-2 w-full">
+          <Evolutions chainUrl={pokemonSpecies.evolution_chain?.url} />
+        </section>
+      </div>
     </Container>
   </div>
 </Layout>
