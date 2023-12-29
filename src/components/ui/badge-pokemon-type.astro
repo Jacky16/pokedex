@@ -4,9 +4,10 @@ import { getTypeColorByPokemonTypeName } from "../../utils/pokemon-types";
 interface Props {
   type: string;
   onlyIcon?: boolean;
+  effectivity?: "1/2" | "X2";
 }
 
-const { type, onlyIcon = false } = Astro.props;
+const { type, onlyIcon = false, effectivity } = Astro.props;
 
 const typeColor = getTypeColorByPokemonTypeName(type);
 ---
@@ -23,15 +24,21 @@ const typeColor = getTypeColorByPokemonTypeName(type);
     />
   ) : (
     <div
-      class="flex items-center px-2 rounded-full select-none"
-      style={{
-        backgroundColor: typeColor,
-      }}
+      class="relative inline-flex justify-center items-center px-5 rounded-full w-fit"
+      style={{ backgroundColor: typeColor }}
     >
-      <span class="first-letter:uppercase text-white">{type}</span>
+      {effectivity && (
+        <div class="z-10 w-6 h-6 absolute bottom-4 right-0 flex items-center justify-center text-[10px] font-bold text-white bg-black rounded-full select-none">
+          {effectivity}
+        </div>
+      )}
+      <span class="items-center justify-center text-sm text-white font-semibold first-letter:uppercase ">
+        {type}
+      </span>
       <img
         width="28"
         height="28"
+        class="scale-110 w-7 h-7 select-none"
         src={`/public/images/icons/pokemon-types/${type}.svg`}
       />
     </div>
