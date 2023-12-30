@@ -20,9 +20,9 @@ const CheckboxPokemonType = ({
       ></input>
       <label
         htmlFor={`checkbox-${pokemonType}`}
-        className="inline-flex items-center justify-between w-full px-2.5 py-4 text-gray-600 bg-white border-2 border-gray-200 rounded-lg cursor-pointer peer-checked:bg-secondary hover:scale-105 transition-transform"
+        className="inline-flex items-center justify-between w-full p-2.5 text-gray-600 bg-white border-2 border-gray-200 rounded-lg cursor-pointer peer-focus:ring-primary peer-checked:bg-secondary hover:scale-[1.02] transition-all"
       >
-        <div className="flex items-center gap-2 peer-focus:bg-red-300">
+        <div className="flex items-center gap-4 ">
           <img
             width="28"
             height="28"
