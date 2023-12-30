@@ -8,7 +8,8 @@ module.exports = {
         sans: ["Roboto Mono Variable", "sans-serif"],
       },
       colors: {
-        primary: "#EDD53E",
+        primary:"#FD3836",
+        secondary: "#EDD53E",
       },
     },
   },
