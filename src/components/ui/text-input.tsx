@@ -15,7 +15,7 @@ const TextInput = ({ ...props }: TextInputProps) => {
           <title>pokemon</title>
           <path
             d="M9.17 13H3a1 1 0 0 1-1-1C2 6.477 6.477 2 12 2c4.128 0 7.786 2.524 9.29 6.294a1 1 0 1 1-1.857.741A8.002 8.002 0 0 0 4.062 11H9.17a3.001 3.001 0 0 1 5.658 0h6.173a1 1 0 0 1 1 1c0 5.523-4.477 10-10 10a10.002 10.002 0 0 1-9.29-6.294 1 1 0 0 1 1.857-.741A8.002 8.002 0 0 0 19.939 13h-5.11a3.001 3.001 0 0 1-5.658 0zM12 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"
-            fill="#3e3e3e"
+            fill="#4e4e4e"
             fillRule="nonzero"
           ></path>
         </svg>
@@ -23,7 +23,7 @@ const TextInput = ({ ...props }: TextInputProps) => {
 
       <input
         {...props}
-        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:outline-primary/40 block w-full ps-10 p-2.5"
+        className="bg-gray-50 border-2 border-gray-200 text-gray-900 rounded-lg focus:outline-primary/40  w-full ps-10 p-3"
       />
     </div>
   );
