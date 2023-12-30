@@ -1,19 +1,52 @@
 ---
+import Container from "../components/container.astro";
 import PokemonCard from "../components/pokemon-card.astro";
 import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout title="Pokedex">
+  <img
+    src="/public/images/pokeball-icon-grayscale.png"
+    alt="pokeball"
+    width="512"
+    height="512"
+    class="opacity-10 absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 rotate-45 z-0"
+  />
+
   <div
-    class="grid gap-y-8 gap-x-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4"
+    class="absolute inset-0 -z-10 h-full w-full bg-neutral-100 bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]"
   >
-    <PokemonCard pokemonName="bulbasaur" />
-    <PokemonCard pokemonName="squirtle" />
-    <PokemonCard pokemonName="charmander" />
-    <PokemonCard pokemonName="eevee" />
-    <PokemonCard pokemonName="ditto" />
-    <PokemonCard pokemonName="pikachu" />
-    <PokemonCard pokemonName="charizard" />
-    <PokemonCard pokemonName="mew" />
   </div>
+
+  <Container>
+    <div class="w-full flex flex-col items-center gap-2">
+      <div class="flex items-center justify-center gap-6">
+        <h1 class="text-7xl md:text-8xl font-bold text-center text-neutral-600">
+          Pokedex
+        </h1>
+        <img
+          src="/public/images/pokeball-big.webp"
+          alt="pokeball"
+          width="128"
+          height="128"
+          class="hidden md:block relative hover:rotate-180 transition-transform duration-[4000ms] ease-in-out select-none"
+        />
+      </div>
+      <p class="text-lg text-center md:text-xl text-neutral-500">
+        Search for your favorite Pokemon
+      </p>
+    </div>
+    <div
+      class="w-full flex flex-col md:grid gap-y-8 gap-x-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4"
+    >
+      <PokemonCard pokemonName="bulbasaur" />
+      <PokemonCard pokemonName="squirtle" />
+      <PokemonCard pokemonName="charmander" />
+      <PokemonCard pokemonName="eevee" />
+      <PokemonCard pokemonName="ditto" />
+      <PokemonCard pokemonName="pikachu" />
+      <PokemonCard pokemonName="charizard" />
+      <PokemonCard pokemonName="mew" />
+    </div>
+  </Container>
 </Layout>

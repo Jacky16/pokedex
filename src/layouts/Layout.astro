@@ -5,7 +5,7 @@ import { ViewTransitions } from "astro:transitions";
 
 interface Props {
   title: string;
-  themeColor?: string;
+  themeColor?: string | null;
 }
 
 const { title, themeColor = "#EDD53E" } = Astro.props;
@@ -37,10 +37,14 @@ const { title, themeColor = "#EDD53E" } = Astro.props;
 
     <title>{title}</title>
   </head>
-  <body>
+  <body class="bg-neutral-100">
     <Header />
     <main class="flex flex-col items-center gap-4">
       <slot />
     </main>
+    <style>
+      html {
+      }
+    </style>
   </body>
 </html>

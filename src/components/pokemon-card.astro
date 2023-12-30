@@ -22,11 +22,11 @@ const backgroundColor = getTypeColorByPokemonTypeName(
 
 <a
   href={`/pokemon/${pokemon.name}`}
-  class="hover:scale-105 transition-transform ease-in-out"
+  class="hover:scale-105 transition-transform ease-in-out w-full"
 >
   <article class="relative w-full flex flex-col gap-2">
     <div
-      class={`relative flex justify-center items-center overflow-visible h-72 w-72 rounded-xl`}
+      class={`relative w-full h-72 flex justify-center items-center overflow-visible   rounded-xl`}
       transition:name={`pokemon ${pokemon.name} box`}
       style={{
         backgroundColor: backgroundColor ?? undefined,
